@@ -51,6 +51,8 @@ AddType application/x-httpd-php-source .phps
 
 增加属性：
 olcRootPW: 123456
+
+# service slapd restart
 {% endhighlight %}
 
 访问 http://localhost/phpldapadmin
