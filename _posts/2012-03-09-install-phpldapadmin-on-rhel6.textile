@@ -25,8 +25,8 @@ AddType application/x-httpd-php-source .phps
 
 {% highlight bash %}
 # tar xzvf phpldapadmin-1.2.2.tgz
-# cp -R phpldapadmin /var/www/html
 # mv phpldapadmin-1.2.2 phpldapadmin
+# cp -R phpldapadmin /var/www/html
 {% endhighlight %}
 
 配置 phpLDAPAdmin：
