@@ -9,9 +9,7 @@ tags:
 
 配置 Apache：
 
-{% highlight bash %}
-# vim /etc/httpd/conf/httpd.conf bbb
-{% endhighlight %}
+    # vim /etc/httpd/conf/httpd.conf
 
 加入如下设置：
 
