@@ -1,27 +1,28 @@
 ---
 layout: nil
+title : Atom Feed
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-
- <title>Bati Zhao</title>
- <link href="http://batizhao.github.com/atom.xml" rel="self"/>
- <link href="http://batizhao.github.com/"/>
+ 
+ <title>{{ site.title }}</title>
+ <link href="{{ site.production_url }}/atom.xml" rel="self"/>
+ <link href="{{ site.production_url }}"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
- <id>http://batizhao.github.com/</id>
+ <id>{{ site.production_url }}</id>
  <author>
-   <name>Bati Zhao</name>
-   <email>zhaobati@gmail.com</email>
+   <name>{{ site.author.name }}</name>
+   <email>{{ site.author.email }}</email>
  </author>
 
  {% for post in site.posts %}
  <entry>
    <title>{{ post.title }}</title>
-   <link href="http://batizhao.github.com{{ post.url }}"/>
+   <link href="{{ site.production_url }}{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
-   <id>http://batizhao.github.com{{ post.id }}</id>
+   <id>h{{ site.production_url }}{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
  </entry>
  {% endfor %}
-
+ 
 </feed>
