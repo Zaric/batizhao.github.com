@@ -1,46 +1,33 @@
 ---
 layout: page
-title: Hello World!
-tagline: Supporting tagline
+title: Hello !
+tagline: 
 ---
 {% include JB/setup %}
 
-Read [Jekyll Quick Start](http://jekyllbootstrap.com/usage/jekyll-quick-start.html)
+I'm **Bati Zhao**.
 
-Complete usage and documentation available at: [Jekyll Bootstrap](http://jekyllbootstrap.com)
+A web developer living in Shanghai, China. I currently work at **<a href="http://www.ideal.sh.cn/">Ideal</a>**
+  coding **Java** apps. You can check some of my **code** and activity on **<a href="https://github.com/batizhao/">github</a>**. Feel free to **contact** me via **<a href="mailto:zhaobati@gmail.com">email</a>** or follow me on **<a href="https://twitter.com/batizhao">twitter</a>**.
 
-## Update Author Attributes
+<div id="homelinks">
+  <div class="span-left code">
+    <a href="https://github.com/batizhao/"><b>Code</b> → github.com/batizhao</a>
+  </div>
+  <div class="span-right last blog">
+    <a href="http://batizhao.github.com">batizhao.github.com ← <b>Blog</b></a>
+  </div>
+  <div class="span-left email">
+    <a href="mailto:zhaobati@gmail.com"><b>Email</b> → zhaobati@gmail.com</a>
+  </div>
+  <div class="span-right last twitter">
+    <a href="https://twitter.com/batizhao">@batizhao ← <b>Twitter</b></a>
+  </div>
+</div>
 
-In `_config.yml` remember to specify your own data:
-    
-    title : My Blog =)
-    
-    author :
-      name : Name Lastname
-      email : blah@email.test
-      github : username
-      twitter : username
-
-The theme should reference these variables whenever needed.
-    
-## Sample Posts
-
-This blog contains sample posts which help stage pages and blog data.
-When you don't need the samples anymore just delete the `_posts/core-samples` folder.
-
-    $ rm -rf _posts/core-samples
-
-Here's a sample "posts list".
-
-<ul class="posts">
+<ul class="posts" style="clear:both">
   {% for post in site.posts %}
     <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>
-
-## To-Do
-
-This theme is still unfinished. If you'd like to be added as a contributor, [please fork](http://github.com/plusjade/jekyll-bootstrap)!
-We need to clean up the themes, make theme usage guides with theme-specific markup examples.
-
 

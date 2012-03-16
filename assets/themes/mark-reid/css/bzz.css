@@ -1,0 +1,16 @@
+div#homelinks div{
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+div#homelinks div a{
+  margin: 15px;
+  line-height: 2.5em;
+  color: #FFFFFF;
+}
+div#homelinks div.email{ background-color: #999999; }
+div#homelinks div.twitter{ background-color: #FF833B; text-align: right;}
+div#homelinks div.code{ background-color: #FFCB0E;}
+div#homelinks div.blog{ background-color: #52ADB1; text-align: right;}
+
+.span-left {width:314px; float:left; margin:0 10px 0 0}
+.span-right {width:314px; float:left; margin:0; padding:0;}
