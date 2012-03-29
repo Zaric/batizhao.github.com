@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "在 RHEL6 上安装、配置 OpenLDAP"
+title: "在 RHEL6 上安装 OpenLDAP"
 category: linux
 tags: 
 - linux
