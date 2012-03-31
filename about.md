@@ -7,7 +7,7 @@ title: "About"
 <h2>About Me</h2>
 
 <p>
-This is the website of a Chinese ordinary guy who became a amateur volleyball player who became a mechatronics technician who became a computer science college student who became a web developer who became a project manager who got married who became an uncle who became an entrepreneur and who usually can't predict next steps.
+This is the website of a Chinese ordinary guy.
 </p>
 
 <p>
