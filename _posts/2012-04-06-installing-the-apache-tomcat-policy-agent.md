@@ -88,7 +88,7 @@ tags:
 	
 ![](/images/2012-04-06-installing-the-apache-tomcat-policy-agent-1.png)	
 
-Access Control - Top Level Realm - Policies，点击 New Policy，在 Rules 下边点击 New，选择 URL Policy Agent，
+Access Control - Top Level Realm - Policies，点击 New Policy，在 Rules 下边点击 New，选择 URL Policy Agent
 
 	Name: URLPolicy
 	Resource Name: http://website.example.com:8080/agentsample/*
@@ -109,5 +109,4 @@ Access Control - Top Level Realm - Policies，点击 New Policy，在 Rules 下�
 
 ![](/images/2012-04-06-installing-the-apache-tomcat-policy-agent-3.png)
 
-如果是同一个浏览器，先注销 OpenAM，启动 Tomcat，访问 agentsample，会被重定向到 OpenAM 的登录页面，
-这时使用 user001,user002 可以正常登录，使用其它用户不可以。
+如果是同一个浏览器，先注销 OpenAM，访问 agentsample，会被重定向到 OpenAM 的登录页面，这时使用 user001，user002 可以正常登录，使用其它用户不可以。
