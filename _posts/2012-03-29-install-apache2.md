@@ -8,7 +8,7 @@ tags:
 - sso
 ---
 
-最近在配置 openAM ，在参考[这篇文章](https://wikis.forgerock.org/confluence/display/openam/Add+Authentication+to+a+Website+using+OpenAM)
+最近在配置 OpenAM ，在参考[这篇文章](https://wikis.forgerock.org/confluence/display/openam/Add+Authentication+to+a+Website+using+OpenAM)
 时遇到了一个 `[error] Certificate not found: 'Server-Cert'` 的问题。在尝试很多次之后无解，所以下载最新的 apache2.2.22 替换系统自带的 apache2.2.15，看能不能解决问题。
 
 首先，卸载自带的 Apache2

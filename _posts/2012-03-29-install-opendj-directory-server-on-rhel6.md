@@ -5,6 +5,7 @@ category: linux
 tags: 
 - linux
 - ldap
+- sso
 ---
 
 官网"OpenDJ is a extension of the Sun Microsystems' initiated OpenDS project and offers a fully supported product for it."
