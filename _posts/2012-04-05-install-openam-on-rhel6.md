@@ -5,6 +5,7 @@ category:
 tags: 
 - linux
 - sso
+- ldap
 ---
 
 由于参加 Cloud Foundry 和清明假期，这个系列中断了几天。从今天开始继续。
@@ -43,7 +44,7 @@ Step 2
 ![](/images/2012-04-05-install-openam-on-rhel6-2.png)
 
 Step 3 这步发现一个 OpenAM 本身的问题，OpenAM 本身支持多国语言，在客户端系统是中文环境和英文环境下，	在 `Step 3` 中显示的内容稍有不同，
-在中文环境下不显示 `OpenDJ` 选项(可能是 OpenAM 版本问题)。	
+在中文环境下不显示 `OpenDJ` 选项（可能是 OpenAM 版本问题）。	
 
 ![](/images/2012-04-05-install-openam-on-rhel6-3.png)
 	
