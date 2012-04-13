@@ -94,7 +94,7 @@ Access Control - Top Level Realm - Policies，点击 New Policy，在 Rules 下�
 	Resource Name: http://website.example.com:8080/agentsample/*
 	Actions : Select and allow both GET and POST
 	
-在 Subjects	下边点击 New，选择 OpenAM Identity Subject
+在 Subjects	下边点击 New，选择 OpenAM Identity Subject（如果选择 Authenticated Users，不限制用户）
 
 	Name: userAccess
 	Exclusive : Not ticked
