@@ -105,4 +105,16 @@ tags:
 
 	# bin/control-panel
 	
+加入到 service（以 root 运行）
+
+	# bin/create-rc-script -f /etc/init.d/opendj	
+	
+加入到 service（以 userName 运行）
+
+	# bin/create-rc-script -f /etc/init.d/opendj -u userName
+	
+运行
+
+	# service opendj { start | stop | restart }	
+	
 更详细的安装文档，请参照[官方文档](http://opendj.forgerock.org/doc/install-guide/index/preface.html)。	
