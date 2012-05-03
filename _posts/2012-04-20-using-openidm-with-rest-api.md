@@ -28,7 +28,7 @@ tags:
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
 	--request PUT \
-	--data '{ "userName":"joe", "givenName":"joe", "familyName":"smith", "email":["joe@example.com"], "description":"My first user" }' \
+	--data '{ "userName":"joe", "givenName":"joe", "familyName":"smith", "email":["joe@example.com"], "displayName":"Felicitas Doe", "description":"My first user" }' \
 	http://openam.example.com:9090/openidm/managed/user/joe
 	
 返回的 JSON 结果
@@ -51,7 +51,8 @@ tags:
 	 "description":"My first user",
 	 "familyName":"smith",
 	 "userName":"joe",
-	 "givenName":"joe"
+	 "givenName":"joe",
+	 "displayName":"Felicitas Doe"
 	}
 
 Java 代码在 [Github](https://github.com/batizhao/openam-java-sample/tree/master/idm-client) 。
