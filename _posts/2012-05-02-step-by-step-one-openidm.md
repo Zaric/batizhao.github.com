@@ -14,7 +14,32 @@ tags:
 如果你看过 [使用 OpenIDM RESTful API](http://localhost:4000/java/2012/04/20/using-openidm-with-rest-api/) ,
 这时在 managedobjects 表中应该有两条数据。
 
-	cp -r samples/sample3/conf samples/sample3/tools .
+managed/user
+
+	{
+	 "_rev":"0",
+	 "_id":"joe",
+	 "email":["joe@example.com"],
+	 "description":"My first user",
+	 "familyName":"smith",
+	 "userName":"joe",
+	 "givenName":"joe",
+	 "displayName":"Felicitas Doe"
+	}
+
+managed/organizationUnit
+	
+	{
+	 "_rev":"0",
+	 "_id":"ideal",
+	 "dn":"ou=ideal,ou=people,dc=example,dc=com",
+	 "description":"ideal company",
+	 "name":"ideal"
+	}
+
+执行
+
+	# cp -r samples/sample3/conf samples/sample3/tools .
 	
 在我使用的这个版本中，CreateScript.groovy 脚本中 `__ACCOUNT__` 这段内容的语法有一个错误，参数属性的最后一段应该是 `,` 这里写成了 `;` 。
 
@@ -23,8 +48,8 @@ tags:
 	{
     "mappings" : [
         {
-            "name" : "systemManagedOrganization_hrdb",
-            "source" : "managed/organization",
+            "name" : "managedOrganizationUnit_hrdb",
+            "source" : "managed/organizationUnit",
             "target" : "system/hrdb/organization",
             "properties" : [
                 {
@@ -72,7 +97,7 @@ tags:
             ]
         },
         {
-            "name" : "systemManagedUser_hrdb",
+            "name" : "managedUser_hrdb",
             "source" : "managed/user",
             "target" : "system/hrdb/account",
             "properties" : [
@@ -157,12 +182,12 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=systemManagedOrganization_hrdb"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_hrdb"
 	
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=systemManagedUser_hrdb"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedUser_hrdb"
 	
 返回 JSON 结果
 
@@ -180,7 +205,7 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 在 sync.json 中增加
 	
 	{
-		"name" : "managedUser_systemLdapAccounts",
+		"name" : "managedUser_ldap",
 		"source" : "managed/user",
 		"target" : "system/ldap/account",
 		"correlationQuery" : {
@@ -253,8 +278,8 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 		]
 	},
 	{
-		"name" : "managedOrganization_ldap",
-		"source" : "managed/organization",
+		"name" : "managedOrganizationUnit_ldap",
+		"source" : "managed/organizationUnit",
 		"target" : "system/ldap/organizationalUnit",
 		"properties" : [
 			{
@@ -264,12 +289,12 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 			{
 				"source" : "name",
 				"target" : "ou"
+			},
+			{
+				"source" : "dn",
+				"target" : "dn"
 			}
 		],
-		"onCreate" : {
-			"type" : "text/javascript",
-			"source" : "target.dn = 'ou=' + source.name + ',ou=People,dc=example,dc=com';"
-		},
 		"policies" : [
 			{
 				"situation" : "CONFIRMED",
@@ -482,12 +507,12 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedUser_systemLdapAccounts"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedUser_ldap"
 	
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganization_ldap"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_ldap"
 	
 返回
 
@@ -498,10 +523,10 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 ## 3. 定时同步
 
 除了可以调用 REST API 同步之外，OpenIDM 也提供了 Cron 的方式进行调度。可以分别为上边的 4 个接口建立 scheduler-recon 文件。
-以 managedOrganization_ldap 为例
+以 managedOrganizationUnit_ldap 为例
 
 	# cp samples/sample2/conf/scheduler-recon.json conf
-	# mv conf/scheduler-recon.json conf/scheduler-recon_managedOrganization_ldap.json 
+	# mv conf/scheduler-recon.json conf/scheduler-recon_managedOrganizationUnit_ldap.json 
 
 打开文件，enabled 修改为 true，schedule 和 mapping 修改为相应的配置
 	
@@ -512,8 +537,10 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 		"invokeService": "sync",
 		"invokeContext": {
 			"action": "reconcile",
-			"mapping": "managedOrganization_ldap"
+			"mapping": "managedOrganizationUnit_ldap"
 		}
 	}
 	
 重启 OpenIDM 后，	Organization 和 User 会分别同步到 OpenDJ 和 MySQL。
+
+如果需要停止调度任务，除了修改 scheduler-recon.json 文件，可能还需要删除 configobjects 表中的 org.forgerock.openidm.scheduler 相关纪录。
