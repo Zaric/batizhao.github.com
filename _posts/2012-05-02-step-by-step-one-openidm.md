@@ -27,14 +27,14 @@ managed/user
 	 "displayName":"Felicitas Doe"
 	}
 
-managed/organizationUnit
+managed/organization
 	
 	{
 	 "_rev":"0",
-	 "_id":"ideal",
-	 "dn":"ou=ideal,ou=people,dc=example,dc=com",
-	 "description":"ideal company",
-	 "name":"ideal"
+	 "_id":"shanghai",
+	 "dn":"o=shanghai,dc=example,dc=com",
+	 "description":"shanghai",
+	 "name":"shanghai"
 	}
 
 执行
@@ -48,8 +48,8 @@ managed/organizationUnit
 	{
     "mappings" : [
         {
-            "name" : "managedOrganizationUnit_hrdb",
-            "source" : "managed/organizationUnit",
+            "name" : "managedOrganization_hrdb",
+            "source" : "managed/organization",
             "target" : "system/hrdb/organization",
             "properties" : [
                 {
@@ -182,7 +182,7 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_hrdb"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganization_hrdb"
 	
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
@@ -205,82 +205,9 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 在 sync.json 中增加
 	
 	{
-		"name" : "managedUser_ldap",
-		"source" : "managed/user",
-		"target" : "system/ldap/account",
-		"correlationQuery" : {
-			"type" : "text/javascript",
-			"file" : "script/ldapBackCorrelationQuery.js"
-		},
-		"properties" : [
-			{
-				"source" : "givenName",
-				"target" : "givenName"
-			},
-			{
-				"source" : "familyName",
-				"target" : "sn"
-			},
-			{
-				"source" : "displayName",
-				"target" : "cn"
-			},
-			{
-				"source" : "userName",
-				"target" : "uid"
-			},
-			{
-				"source" : "description",
-				"target" : "description"
-			},
-			{
-				"source" : "email",
-				"target" : "mail"
-			}
-		],
-		"onCreate" : {
-			"type" : "text/javascript",
-			"source" : "target.dn = 'uid=' + source.userName + ',ou=People,dc=example,dc=com';"
-		},
-		"policies" : [
-			{
-				"situation" : "CONFIRMED",
-				"action" : "UPDATE"
-			},
-			{
-				"situation" : "FOUND",
-				"action" : "LINK"
-			},
-			{
-				"situation" : "ABSENT",
-				"action" : "CREATE"
-			},
-			{
-				"situation" : "AMBIGUOUS",
-				"action" : "IGNORE"
-			},
-			{
-				"situation" : "MISSING",
-				"action" : "IGNORE"
-			},
-			{
-				"situation" : "SOURCE_MISSING",
-				"action" : "IGNORE"
-			},
-			{
-				"situation" : "UNQUALIFIED",
-				"action" : "IGNORE"
-			},
-			{
-				"situation" : "UNASSIGNED",
-				"action" : "IGNORE"
-			}
-		]
-	},
-	{
-		"name" : "managedOrganizationUnit_ldap",
-		"source" : "managed/organizationUnit",
-		"target" : "system/ldap/organizationalUnit",
+		"name" : "managedOrganization_ldap",
+		"source" : "managed/organization",
+		"target" : "system/ldap/organization",
 		"properties" : [
 			{
 				"source" : "description",
@@ -288,7 +215,7 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 			},
 			{
 				"source" : "name",
-				"target" : "ou"
+				"target" : "o"
 			},
 			{
 				"source" : "dn",
@@ -329,177 +256,353 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 				"action" : "IGNORE"
 			}
 		]
+	},
+	{
+		"name" : "managedUser_ldap",
+		"source" : "managed/user",
+		"target" : "system/ldap/account",
+		"correlationQuery" : {
+			"type" : "text/javascript",
+			"file" : "script/ldapBackCorrelationQuery.js"
+		},
+		"properties" : [
+			{
+				"source" : "givenName",
+				"target" : "givenName"
+			},
+			{
+				"source" : "familyName",
+				"target" : "sn"
+			},
+			{
+				"source" : "displayName",
+				"target" : "cn"
+			},
+			{
+				"source" : "userName",
+				"target" : "uid"
+			},
+			{
+				"source" : "description",
+				"target" : "description"
+			},
+			{
+				"source" : "email",
+				"target" : "mail"
+			}
+		],
+		"onCreate" : {
+			"type" : "text/javascript",
+			"source" : "target.dn = 'uid=' + source.userName + ',o=shanghai,dc=example,dc=com';"
+		},
+		"policies" : [
+			{
+				"situation" : "CONFIRMED",
+				"action" : "UPDATE"
+			},
+			{
+				"situation" : "FOUND",
+				"action" : "LINK"
+			},
+			{
+				"situation" : "ABSENT",
+				"action" : "CREATE"
+			},
+			{
+				"situation" : "AMBIGUOUS",
+				"action" : "IGNORE"
+			},
+			{
+				"situation" : "MISSING",
+				"action" : "IGNORE"
+			},
+			{
+				"situation" : "SOURCE_MISSING",
+				"action" : "IGNORE"
+			},
+			{
+				"situation" : "UNQUALIFIED",
+				"action" : "IGNORE"
+			},
+			{
+				"situation" : "UNASSIGNED",
+				"action" : "IGNORE"
+			}
+		]
 	}
 
 修改 provisioner.openicf-ldap.json，在 “objectTypes” 中增加
 	
-	"organizationalUnit" : {
-		"$schema" : "http://json-schema.org/draft-03/schema",
-		"id" : "organizationalUnit",
-		"type" : "object",
-		"nativeType" : "organizationalUnit",
-		"properties" : {
-			"preferredDeliveryMethod" : {
-				"type" : "string",
-				"nativeName" : "preferredDeliveryMethod",
-				"nativeType" : "string"
-			},
-			"l" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+	"organization" :
+	{
+	   "$schema" : "http://json-schema.org/draft-03/schema",
+	   "id" : "organization",
+	   "type" : "object",
+	   "nativeType" : "organization",
+	   "properties" :
+		  {
+			 "preferredDeliveryMethod" :
+				{
+				   "type" : "string",
+				   "nativeName" : "preferredDeliveryMethod",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "l",
-				"nativeType" : "string"
-			},
-			"businessCategory" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "seeAlso" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "seeAlso",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "businessCategory",
-				"nativeType" : "string"
-			},
-			"street" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "x121Address" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "x121Address",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "street",
-				"nativeType" : "string"
-			},
-			"postOfficeBox" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "l" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "l",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "postOfficeBox",
-				"nativeType" : "string"
-			},
-			"postalCode" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "o" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "required" : true,
+				   "nativeName" : "o",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "postalCode",
-				"nativeType" : "string"
-			},
-			"st" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "businessCategory" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "businessCategory",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "st",
-				"nativeType" : "string"
-			},
-			"registeredAddress" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "street" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "street",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "registeredAddress",
-				"nativeType" : "string"
-			},
-			"postalAddress" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "postOfficeBox" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "postOfficeBox",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "postalAddress",
-				"nativeType" : "string"
-			},
-			"objectClass" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "postalCode" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "postalCode",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "objectClass",
-				"nativeType" : "string",
-				"flags" : [
-					"NOT_CREATABLE",
-					"NOT_UPDATEABLE"
-				]
-			},
-			"description" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "st" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "st",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "description",
-				"nativeType" : "string"
-			},
-			"ou" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "registeredAddress" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "registeredAddress",
+				   "nativeType" : "string"
 				},
-				"required" : true,
-				"nativeName" : "ou",
-				"nativeType" : "string"
-			},
-			"physicalDeliveryOfficeName" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "postalAddress" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "postalAddress",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "physicalDeliveryOfficeName",
-				"nativeType" : "string"
-			},
-			"telexNumber" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "objectClass" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "objectClass",
+				   "nativeType" : "string",
+				   "flags" :
+					  [
+						 "NOT_CREATABLE",
+						 "NOT_UPDATEABLE"
+					  ]
 				},
-				"nativeName" : "telexNumber",
-				"nativeType" : "string"
-			},
-			"teletexTerminalIdentifier" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "description" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "description",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "teletexTerminalIdentifier",
-				"nativeType" : "string"
-			},
-			"userPassword" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "JAVA_TYPE_BYTE_ARRAY"
+			 "internationaliSDNNumber" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "internationaliSDNNumber",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "userPassword",
-				"nativeType" : "JAVA_TYPE_BYTE_ARRAY"
-			},
-			"dn" : {
-				"type" : "string",
-				"required" : true,
-				"nativeName" : "__NAME__",
-				"nativeType" : "string"
-			},
-			"telephoneNumber" : {
-				"type" : "array",
-				"items" : {
-					"type" : "string",
-					"nativeType" : "string"
+			 "searchGuide" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "searchGuide",
+				   "nativeType" : "string"
 				},
-				"nativeName" : "telephoneNumber",
-				"nativeType" : "string"
-			}
-		}
+			 "physicalDeliveryOfficeName" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "physicalDeliveryOfficeName",
+				   "nativeType" : "string"
+				},
+			 "telexNumber" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "telexNumber",
+				   "nativeType" : "string"
+				},
+			 "teletexTerminalIdentifier" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "teletexTerminalIdentifier",
+				   "nativeType" : "string"
+				},
+			 "userPassword" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "JAVA_TYPE_BYTE_ARRAY"
+					  },
+				   "nativeName" : "userPassword",
+				   "nativeType" : "JAVA_TYPE_BYTE_ARRAY"
+				},
+			 "dn" :
+				{
+				   "type" : "string",
+				   "required" : true,
+				   "nativeName" : "__NAME__",
+				   "nativeType" : "string"
+				},
+			 "telephoneNumber" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "telephoneNumber",
+				   "nativeType" : "string"
+				},
+			 "destinationIndicator" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "destinationIndicator",
+				   "nativeType" : "string"
+				},
+			 "facsimileTelephoneNumber" :
+				{
+				   "type" : "array",
+				   "items" :
+					  {
+						 "type" : "string",
+						 "nativeType" : "string"
+					  },
+				   "nativeName" : "facsimileTelephoneNumber",
+				   "nativeType" : "string"
+				}
+		  }
 	}
 
 重启 OpenIDM，执行	
@@ -507,12 +610,12 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedUser_ldap"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganization_ldap"
 	
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_ldap"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedUser_ldap"		
 	
 返回
 
@@ -526,7 +629,7 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 以 managedOrganizationUnit_ldap 为例
 
 	# cp samples/sample2/conf/scheduler-recon.json conf
-	# mv conf/scheduler-recon.json conf/scheduler-recon_managedOrganizationUnit_ldap.json 
+	# mv conf/scheduler-recon.json conf/scheduler-recon_managedOrganization_ldap.json 
 
 打开文件，enabled 修改为 true，schedule 和 mapping 修改为相应的配置
 	
@@ -537,7 +640,7 @@ provisioner.openicf-scriptedsql.json 文件中只需要修改 configurationPrope
 		"invokeService": "sync",
 		"invokeContext": {
 			"action": "reconcile",
-			"mapping": "managedOrganizationUnit_ldap"
+			"mapping": "managedOrganization_ldap"
 		}
 	}
 	

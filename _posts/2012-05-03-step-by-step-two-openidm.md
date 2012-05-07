@@ -10,51 +10,53 @@ tags:
 
 在正式的企业场景中，组织一般具有父子关系。我们来看一下在这种情况下，OpenIDM 如何配置。
 
-## 1. 在 managed.json 中增加新类型 organization
+## 1. 增加新的类型 organizationUnit
+
+在 openidm/conf/managed.json 中增加
 
 	{
-		"name" : "organization"
-	}
-	
-查询 organization
+        "name" : "organizationUnit"
+    }
+
+查询 organizationUnit
     
     # curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	http://openam.example.com:9090/openidm/managed/organization/?_query-id=query-all-ids
+	http://openam.example.com:9090/openidm/managed/organizationUnit/?_query-id=query-all-ids
 	
 结果
 
 	{"query-time-ms":6,"result":[]}
 	
-增加 organization
+增加 organizationUnit
 
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
 	--request PUT \
-	--data '{ "name":"dev", "dn":"o=dev,ou=ideal,ou=people,dc=example,dc=com", "description":"ideal dev team" }' \
-	http://openam.example.com:9090/openidm/managed/organization/dev
+	--data '{ "name":"ideal", "dn":"ou=ideal,o=shanghai,dc=example,dc=com", "description":"ideal company" }' \
+	http://openam.example.com:9090/openidm/managed/organizationUnit/ideal
 	
 返回结果
 
 	{"_id":"ideal","_rev":"0"}
 	
-查询新增加的 organization
+查询新增加的 organizationUnit
 
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	http://openam.example.com:9090/openidm/managed/organization/dev
+	http://openam.example.com:9090/openidm/managed/organizationUnit/ideal
 	
 返回结果
 
 	{
 	 "_rev":"0",
-	 "_id":"dev",
-	 "dn":"o=dev,ou=ideal,ou=people,dc=example,dc=com",
-	 "description":"ideal dev team",
-	 "name":"dev"
+	 "_id":"ideal",
+	 "dn":"ou=ideal,o=shanghai,dc=example,dc=com",
+	 "description":"ideal company",
+	 "name":"ideal"
 	}	
 
 ## 2. 配置 OpenIDM 同步
@@ -62,8 +64,8 @@ tags:
 在 sync.json 中增加
 
 	{
-		"name" : "managedOrganization_hrdb",
-		"source" : "managed/organization",
+		"name" : "managedOrganizationUnit_hrdb",
+		"source" : "managed/organizationUnit",
 		"target" : "system/hrdb/organization",
 		"properties" : [
 			{
@@ -111,9 +113,9 @@ tags:
 		]
 	},
 	{
-		"name" : "managedOrganization_ldap",
-		"source" : "managed/organization",
-		"target" : "system/ldap/organization",
+		"name" : "managedOrganizationUnit_ldap",
+		"source" : "managed/organizationUnit",
+		"target" : "system/ldap/organizationalUnit",
 		"properties" : [
 			{
 				"source" : "description",
@@ -121,7 +123,7 @@ tags:
 			},
 			{
 				"source" : "name",
-				"target" : "o"
+				"target" : "ou"
 			},
 			{
 				"source" : "dn",
@@ -166,276 +168,173 @@ tags:
 
 修改 provisioner.openicf-ldap.json，在 “objectTypes” 中增加
 
-	"organization" :
-	{
-	   "$schema" : "http://json-schema.org/draft-03/schema",
-	   "id" : "organization",
-	   "type" : "object",
-	   "nativeType" : "organization",
-	   "properties" :
-		  {
-			 "preferredDeliveryMethod" :
-				{
-				   "type" : "string",
-				   "nativeName" : "preferredDeliveryMethod",
-				   "nativeType" : "string"
+	"organizationalUnit" : {
+		"$schema" : "http://json-schema.org/draft-03/schema",
+		"id" : "organizationalUnit",
+		"type" : "object",
+		"nativeType" : "organizationalUnit",
+		"properties" : {
+			"preferredDeliveryMethod" : {
+				"type" : "string",
+				"nativeName" : "preferredDeliveryMethod",
+				"nativeType" : "string"
+			},
+			"l" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "seeAlso" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "seeAlso",
-				   "nativeType" : "string"
+				"nativeName" : "l",
+				"nativeType" : "string"
+			},
+			"businessCategory" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "x121Address" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "x121Address",
-				   "nativeType" : "string"
+				"nativeName" : "businessCategory",
+				"nativeType" : "string"
+			},
+			"street" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "l" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "l",
-				   "nativeType" : "string"
+				"nativeName" : "street",
+				"nativeType" : "string"
+			},
+			"postOfficeBox" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "o" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "required" : true,
-				   "nativeName" : "o",
-				   "nativeType" : "string"
+				"nativeName" : "postOfficeBox",
+				"nativeType" : "string"
+			},
+			"postalCode" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "businessCategory" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "businessCategory",
-				   "nativeType" : "string"
+				"nativeName" : "postalCode",
+				"nativeType" : "string"
+			},
+			"st" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "street" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "street",
-				   "nativeType" : "string"
+				"nativeName" : "st",
+				"nativeType" : "string"
+			},
+			"registeredAddress" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "postOfficeBox" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "postOfficeBox",
-				   "nativeType" : "string"
+				"nativeName" : "registeredAddress",
+				"nativeType" : "string"
+			},
+			"postalAddress" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "postalCode" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "postalCode",
-				   "nativeType" : "string"
+				"nativeName" : "postalAddress",
+				"nativeType" : "string"
+			},
+			"objectClass" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "st" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "st",
-				   "nativeType" : "string"
+				"nativeName" : "objectClass",
+				"nativeType" : "string",
+				"flags" : [
+					"NOT_CREATABLE",
+					"NOT_UPDATEABLE"
+				]
+			},
+			"description" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "registeredAddress" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "registeredAddress",
-				   "nativeType" : "string"
+				"nativeName" : "description",
+				"nativeType" : "string"
+			},
+			"ou" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "postalAddress" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "postalAddress",
-				   "nativeType" : "string"
+				"required" : true,
+				"nativeName" : "ou",
+				"nativeType" : "string"
+			},
+			"physicalDeliveryOfficeName" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "objectClass" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "objectClass",
-				   "nativeType" : "string",
-				   "flags" :
-					  [
-						 "NOT_CREATABLE",
-						 "NOT_UPDATEABLE"
-					  ]
+				"nativeName" : "physicalDeliveryOfficeName",
+				"nativeType" : "string"
+			},
+			"telexNumber" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "description" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "description",
-				   "nativeType" : "string"
+				"nativeName" : "telexNumber",
+				"nativeType" : "string"
+			},
+			"teletexTerminalIdentifier" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "internationaliSDNNumber" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "internationaliSDNNumber",
-				   "nativeType" : "string"
+				"nativeName" : "teletexTerminalIdentifier",
+				"nativeType" : "string"
+			},
+			"userPassword" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "JAVA_TYPE_BYTE_ARRAY"
 				},
-			 "searchGuide" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "searchGuide",
-				   "nativeType" : "string"
+				"nativeName" : "userPassword",
+				"nativeType" : "JAVA_TYPE_BYTE_ARRAY"
+			},
+			"dn" : {
+				"type" : "string",
+				"required" : true,
+				"nativeName" : "__NAME__",
+				"nativeType" : "string"
+			},
+			"telephoneNumber" : {
+				"type" : "array",
+				"items" : {
+					"type" : "string",
+					"nativeType" : "string"
 				},
-			 "physicalDeliveryOfficeName" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "physicalDeliveryOfficeName",
-				   "nativeType" : "string"
-				},
-			 "telexNumber" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "telexNumber",
-				   "nativeType" : "string"
-				},
-			 "teletexTerminalIdentifier" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "teletexTerminalIdentifier",
-				   "nativeType" : "string"
-				},
-			 "userPassword" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "JAVA_TYPE_BYTE_ARRAY"
-					  },
-				   "nativeName" : "userPassword",
-				   "nativeType" : "JAVA_TYPE_BYTE_ARRAY"
-				},
-			 "dn" :
-				{
-				   "type" : "string",
-				   "required" : true,
-				   "nativeName" : "__NAME__",
-				   "nativeType" : "string"
-				},
-			 "telephoneNumber" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "telephoneNumber",
-				   "nativeType" : "string"
-				},
-			 "destinationIndicator" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "destinationIndicator",
-				   "nativeType" : "string"
-				},
-			 "facsimileTelephoneNumber" :
-				{
-				   "type" : "array",
-				   "items" :
-					  {
-						 "type" : "string",
-						 "nativeType" : "string"
-					  },
-				   "nativeName" : "facsimileTelephoneNumber",
-				   "nativeType" : "string"
-				}
-		  }
+				"nativeName" : "telephoneNumber",
+				"nativeType" : "string"
+			}
+		}
 	}
 	
 重启 OpenIDM，执行	
@@ -443,12 +342,12 @@ tags:
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganization_hrdb"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_hrdb"
 	
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganization_ldap"
+	--request POST "http://openam.example.com:9090/openidm/sync?_action=recon&mapping=managedOrganizationUnit_ldap"
 	
 返回
 

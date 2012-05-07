@@ -57,51 +57,49 @@ tags:
 
 Java 代码在 [Github](https://github.com/batizhao/openam-java-sample/tree/master/idm-client) 。
 
-## 2. 增加新的类型 organizationUnit
-
-在 openidm/conf/managed.json 中增加
+## 2. 在 managed.json 中增加新类型 organization
 
 	{
-        "name" : "organizationUnit"
-    }
-
-查询 organizationUnit
+		"name" : "organization"
+	}
+	
+查询 organization
     
     # curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	http://openam.example.com:9090/openidm/managed/organizationUnit/?_query-id=query-all-ids
+	http://openam.example.com:9090/openidm/managed/organization/?_query-id=query-all-ids
 	
 结果
 
-	{"query-time-ms":6,"result":[]}
+	{"query-time-ms":2,"result":[]}
 	
-增加 organizationUnit
+增加 organization
 
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
 	--request PUT \
-	--data '{ "name":"ideal", "dn":"ou=ideal,ou=people,dc=example,dc=com", "description":"ideal company" }' \
-	http://openam.example.com:9090/openidm/managed/organizationUnit/ideal
+	--data '{ "name":"shanghai", "dn":"o=shanghai,dc=example,dc=com", "description":"shanghai" }' \
+	http://openam.example.com:9090/openidm/managed/organization/shanghai
 	
 返回结果
 
-	{"_id":"ideal","_rev":"0"}
+	{"_id":"shanghai","_rev":"0"}
 	
-查询新增加的 organizationUnit
+查询新增加的 organization
 
 	# curl \
 	--header "X-OpenIDM-Username: openidm-admin" \
 	--header "X-OpenIDM-Password: openidm-admin" \
-	http://openam.example.com:9090/openidm/managed/organizationUnit/ideal
+	http://openam.example.com:9090/openidm/managed/organization/shanghai
 	
 返回结果
 
 	{
 	 "_rev":"0",
-	 "_id":"ideal",
-	 "dn":"ou=ideal,ou=people,dc=example,dc=com",
-	 "description":"ideal company",
-	 "name":"ideal"
+	 "_id":"shanghai",
+	 "dn":"o=shanghai,dc=example,dc=com",
+	 "description":"shanghai",
+	 "name":"shanghai"
 	}					
