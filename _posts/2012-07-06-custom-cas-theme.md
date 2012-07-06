@@ -35,3 +35,5 @@ twitter-bootstrap-views.properties 配置 jsp 的路径，这里只修改了登�
 如果需要修改界面文字，从 target 下边复制 messages_zh_CN.properties 文件。这些文件在 mvn package 后会
 相应的增加或者替换到 CAS 的 war 包中。在开发环境可以使用 mvn tomcat6:run 直接进行测试。
 完整代码在 [Github](https://github.com/batizhao/custom-cas/tree/master/server-ldap)。
+
+![](/images/2012-07-06-custom-cas-theme.png)
