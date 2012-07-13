@@ -12,7 +12,7 @@ tags:
 接下来的这几篇文章会介绍 ForgeRock Open Platform 的 OpenDJ、OpenIDM、OpenAM 三个产品的安装、配置，
 以及如何使用他们来搭建企业用户管理、访问认证的基础平台。
 
-确认 Java 环境
+确认 Java 环境，否则请参考[在 RHEL6 上安装 Java](/linux/2012/03/29/install-java-on-rhel6/)
 
 	# java -version
 	java version "1.6.0_31"
@@ -68,8 +68,8 @@ tags:
 	
 	安装摘要
 	=============
-	LDAP 侦听器端口: 1389
-	管理连接器端口:    4444
+	LDAP 侦听器端口: 389
+	管理连接器端口:   4444
 	LDAP 安全访问:  已禁用
 	超级用户 DN:    cn=Directory Manager
 	目录数据:       创建新的基 DN dc=example,dc=com。
@@ -101,7 +101,7 @@ tags:
 
 	# bin/start-ds
 	
-控制面板
+启动控制面板
 
 	# bin/control-panel
 	
@@ -117,4 +117,15 @@ tags:
 
 	# service opendj { start | stop | restart }	
 	
-更详细的安装文档，请参照[官方文档](http://opendj.forgerock.org/doc/install-guide/index/preface.html)。	
+设置自动启动
+
+	# chkconfig --add opendj
+
+查看 service 启动设置，345 已经生效，Reboot 之后 OpenDJ 自动启动
+	
+	# chkconfig --list|grep opendj
+
+	opendj         	0:关闭	1:关闭	2:关闭	3:启用	4:启用	5:启用	6:关闭		
+	
+更详细的安装文档，请参照 [官方文档](http://opendj.forgerock.org/doc/install-guide/index/preface.html) 或者
+[在 CentOS6 上安装 OpenDJ（GUI）](/linux/2012/07/13/install-opendj-on-centos6-with-gui/)。	
