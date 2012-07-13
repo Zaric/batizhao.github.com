@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "CentOS6.3 安装 vncserver"
+title: "在 CentOS6 上安装 vncserver"
 category: linux 
 tags: 
 - linux
