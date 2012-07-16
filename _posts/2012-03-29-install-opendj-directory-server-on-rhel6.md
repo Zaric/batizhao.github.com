@@ -111,21 +111,17 @@ tags:
 	
 加入到 service（以 userName 运行）
 
-	# bin/create-rc-script -f /etc/init.d/opendj -u userName
-	
-运行
-
-	# service opendj { start | stop | restart }	
-	
-设置自动启动
-
-	# chkconfig --add opendj
+	# bin/create-rc-script -f /etc/init.d/opendj -u userName	
 
 查看 service 启动设置，345 已经生效，Reboot 之后 OpenDJ 自动启动
 	
 	# chkconfig --list|grep opendj
 
-	opendj         	0:关闭	1:关闭	2:关闭	3:启用	4:启用	5:启用	6:关闭		
+	opendj         	0:关闭	1:关闭	2:关闭	3:启用	4:启用	5:启用	6:关闭
+	
+运行
+
+	# service opendj { start | stop | restart }				
 	
 更详细的安装文档，请参照 [官方文档](http://opendj.forgerock.org/doc/install-guide/index/preface.html) 或者
 [在 CentOS6 上安装 OpenDJ（GUI）](/linux/2012/07/13/install-opendj-on-centos6-with-gui/)。	
