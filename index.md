@@ -27,8 +27,8 @@ A web developer living in Shanghai, China. I currently work at **<a href="http:/
 
 <hr />
 
-<ul class="posts" style="clear:both">
-  {% for post in site.posts %}
+<ul class="posts" style="clear:both">  
+  {% for post in site.posts  limit:10%}
     <li><span>{{ post.date | date_to_string }}</span> &raquo; <a href="{{ BASE_PATH }}{{ post.url }}">{{ post.title }}</a></li>
   {% endfor %}
 </ul>

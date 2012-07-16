@@ -105,13 +105,16 @@ tags:
 
 	# bin/control-panel
 	
-加入到 service（以 root 运行）
+加入到 service 方式一（以 root 运行）
 
 	# bin/create-rc-script -f /etc/init.d/opendj	
 	
-加入到 service（以 userName 运行）
+加入到 service 方式二（如果没有 -u 参数会以 root 运行）。
+生产环境建议以这种方式运行，但 OpenDJ 的某些版本有 Bug：[OPENDJ-17](https://bugster.forgerock.org/jira/browse/OPENDJ-17)
 
-	# bin/create-rc-script -f /etc/init.d/opendj -u userName	
+	# useradd -s /sbin/nologin opendj
+	# chown -R opendj:opendj /opt/opendj
+	# bin/create-rc-script -f /etc/init.d/opendj -u opendj	
 
 查看 service 启动设置，345 已经生效，Reboot 之后 OpenDJ 自动启动
 	

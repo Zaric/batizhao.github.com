@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "在 CentOS6 上安装 bind（DNS Server）"
+title: "在 CentOS6 上安装 BIND（DNS Server）"
 category: linux
 tags: 
 - linux
