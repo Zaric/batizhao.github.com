@@ -45,7 +45,8 @@ tags:
 	# description: Starts and Stops the Tomcat daemon. 
 	
 	JAVA_HOME=/usr/java/jdk1.6.0_31
-	CATALINA_HOME=/opt/tomcat7 
+	CATALINA_HOME=/opt/tomcat7
+	CATALINA_OPTS="-Xms1024m -Xmx2048m -XX:PermSize=256m -XX:MaxPermSize=512m" 
 
 增加到 service
 
