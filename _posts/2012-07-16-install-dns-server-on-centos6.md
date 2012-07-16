@@ -251,4 +251,8 @@ dev.org 反向解析文件
 	
 在最后添加
 	
-	# /usr/local/named/sbin/named -gc /usr/local/named/etc/named.conf &				 
+	# /usr/local/named/sbin/named -gc /usr/local/named/etc/named.conf &
+	
+服务一旦运行，基本就不会再关闭，重新加载配置使用
+
+	# /usr/local/named/sbin/rndc reload					 
