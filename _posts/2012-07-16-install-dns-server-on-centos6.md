@@ -253,6 +253,25 @@ dev.org 反向解析文件
 	
 	# /usr/local/named/sbin/named -gc /usr/local/named/etc/named.conf &
 	
+## 4. 注意
 服务一旦运行，基本就不会再关闭，重新加载配置使用
 
-	# /usr/local/named/sbin/rndc reload					 
+	# /usr/local/named/sbin/rndc reload		
+	
+如果 iptables 有打开，一定要打开端口
+
+	# netstat -tunpl|grep named
+	----
+	tcp  0  0 10.4.247.20:53  0.0.0.0:*  LISTEN  2987/named          
+	tcp  0  0 127.0.0.1:53    0.0.0.0:*  LISTEN  2987/named          
+	tcp  0  0 127.0.0.1:953   0.0.0.0:*  LISTEN  2987/named          
+	udp  0  0 10.4.247.20:53  0.0.0.0:*          2987/named          
+	udp  0  0 127.0.0.1:53    0.0.0.0:*          2987/named
+
+	# vim /etc/sysconfig/iptables
+	----
+	-A INPUT -m state --state NEW -m tcp -p tcp --dport 53 -j ACCEPT
+	-A INPUT -m state --state NEW -m udp -p udp --dport 53 -j ACCEPT
+	-A INPUT -m state --state NEW -m tcp -p tcp --dport 953 -j ACCEPT  
+       	
+	# service iptables restart				 
