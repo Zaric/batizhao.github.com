@@ -37,7 +37,7 @@ tags:
 	# cp jsvc ../..
 	# cd ../..
 
-在 daemon.sh 的注释后边，正文最开始增加下边四行内容
+在 daemon.sh 的注释后边，正文最开始增加下边五行内容
 	
 	# vim daemon.sh
 	----
