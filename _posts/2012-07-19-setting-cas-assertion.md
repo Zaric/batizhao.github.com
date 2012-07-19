@@ -150,7 +150,7 @@ attributeRepository 属性
 现在可以 mvn package ，重新部署 CAS Server，重新登录访问 home.jsp，可以看到结果多出了一些内容	
     
     Auth: org.springframework.security.cas.authentication.CasAuthenticationToken@1358c3fc: Principal: org.springframework.security.core.userdetails.User@aa9c3074: Username: zhangsan; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: I'M ZHANGSAN.; Credentials: [PROTECTED]; Authenticated: true; Details: org.springframework.security.web.authentication.WebAuthenticationDetails@fffed504: RemoteIpAddress: 127.0.0.1; SessionId: 748C80EE4C063D18F2461486F82FC2C8; Granted Authorities: I'M ZHANGSAN. Assertion: org.jasig.cas.client.validation.AssertionImpl@5b3ba312 Credentials (Service/Proxy Ticket): ST-3-zbmPK3BMjrAmTEwwMlxi-cas
-	Username: org.springframework.security.core.userdetails.User@aa9c3074: Username: zhangsan; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: I'M ZHANGSAN.
+	Username: org.springframework.security.core.userdetails.User@aa9c3074: Username: zhangsan; Password: [PROTECTED]; Enabled: true; AccountNonExpired: true; credentialsNonExpired: true; AccountNonLocked: true; Granted Authorities: ROLE_USER.
 	Credentials: ST-3-zbmPK3BMjrAmTEwwMlxi-cas
 	Assertion: org.jasig.cas.client.validation.AssertionImpl@5b3ba312
 	Assertion Attributes:
