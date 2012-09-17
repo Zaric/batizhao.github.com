@@ -13,7 +13,7 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 
 在初次安装过程中遇到了很多问题，主要是关于帐号设置的问题，这里纪录一下。
 
-# 安装 vsftpd
+# 1. 安装 vsftpd
 
 通过 yum 安装
 
@@ -40,7 +40,7 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 
 	# service iptables restart
 	
-# 配置 vsftpd
+# 2. 配置 vsftpd
 
 增加 ftpuser
 
@@ -136,30 +136,32 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 
 	# service vsftpd restart		
 
-# 问题
+# 3. 问题
 
-#### 500 OOPS: cannot change directory:/home/ftpuser
+* 500 OOPS: cannot change directory:/home/ftpuser
 
-	# getsebool -a|grep ftp
-	# setsebool -P ftp_home_dir on
+
+		# getsebool -a|grep ftp
+		# setsebool -P ftp_home_dir on
 	
-#### 500 OOPS: could not read chroot() list file:/etc/vsftpd/chroot_list
+* 500 OOPS: could not read chroot() list file:/etc/vsftpd/chroot_list
 
-缺少	chroot_list 文件，需要手动建立。
+	缺少	chroot_list 文件，需要手动建立。
 
-	# vim chroot_list
+		# vim chroot_list
 	
-#### 530 Login incorrect.
+* 530 Login incorrect.
 
-可能一：
+	可能一：
 	
-	# vim vsftpd.conf
-	增加：
-	# pam_service_name=vsftpd
+		# vim vsftpd.conf
+		增加：
+		# pam_service_name=vsftpd
 	
-可能二：密码不正确。
+	可能二：密码不正确。
 
-#### 550 Permission denied
-这个问题在我的 Cyberduck for Mac 上有遇到，但是“命令行”和“FileZilla”是没问题的。
+* 550 Permission denied
+
+	这个问题在我的 Cyberduck for Mac 上有遇到，但是“命令行”和“FileZilla”是没问题的。
 
 				
