@@ -156,7 +156,7 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 	
 		# vim vsftpd.conf
 		增加：
-		# pam_service_name=vsftpd
+		pam_service_name=vsftpd
 	
 	可能二：密码不正确。
 
