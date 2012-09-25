@@ -10,7 +10,7 @@ tags:
 ---
 {% include JB/setup %}
 
-因为公司有的项目还运行在 MyBatis2 上边，并且 [SSM](http://code.google.com/p/simple-spring-memcached/) 暂时还不可以直接使用在 MyBatis3 上边（可以通过 Spring Cache 或者直接使用 [mybatis-memcached](http://www.mybatis.org/caches/memcached/) 来实现，但后一种方式不适合那种需要对 Cache 进行精细控制的场景）。所以这里主要写一下如何使用 SSM3 完成 Spring3 + Memcached + MyBatis2 的整合。
+因为公司有的项目还运行在 MyBatis2 上边，并且 [SSM](http://code.google.com/p/simple-spring-memcached/) 暂时还不可以直接使用在 MyBatis3 上边（可以通过 Spring Cache 或者直接使用 [mybatis-memcached](http://www.mybatis.org/caches/memcached/) 来实现，但后一种方式不适合那种需要对 Cache 进行精细控制的场景）。所以这里主要写一下 SSM3 Annotation 的使用。完整的Spring3 + Memcached + MyBatis2 代码在 [ssm3-mybatis2-memcached](https://github.com/batizhao/spring-mybatis-memcached/tree/master/ssm3-mybatis2-memcached)。
 
 # 1. SSM Annotation
 
@@ -156,4 +156,6 @@ SQL:
 	    }
 	}    
 
+
 参考：[使用SSM注解做缓存操作](http://www.colorfuldays.org/program/java/ssm_memcache/)
+
