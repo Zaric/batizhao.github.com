@@ -15,13 +15,12 @@ tags:
 # 1. SSM Annotation
 
 ## SingleCache 类
-操作单个 POJO 的 Cache 数据，由 ParameterValueKeyProvider 和CacheKeyMethod 来标识组装 key。
+操作单个 POJO 的 Cache 数据，由 ParameterValueKeyProvider 和 CacheKeyMethod 来标识组装 key。
 
 Java Code:
 	
 	@ReadThroughSingleCache(namespace = "user", expiration = 600)
-	public User getUser(
-	@ParameterValueKeyProvider Long id)
+	public User getUser(@ParameterValueKeyProvider Long id)
 	
 Memcache Log:
 
