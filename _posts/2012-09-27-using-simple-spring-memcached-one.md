@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "使用 Simple-Spring-Memcached（一）"
+title: "使用 Simple-Spring-Memcached: SingleCache"
 category: java 
 tags: 
 - spring
@@ -9,8 +9,56 @@ tags:
 - java
 ---
 {% include JB/setup %}
+上一篇大概讲了一下 SSM anotation。这章详细看一下 SingleCache 的使用。
 
-场景：某个查询关联的两个以上的 Model，在更新其中一个时，需要让缓存失效。
+## 首先是接下来的几个内容都会用到的两个 POJO
+
+Role Model:
+
+	public class Role implements Serializable {
+
+	    private static final long serialVersionUID = -4708064835003250669L;
+	
+	    private Long id;
+	
+	    private String name;
+	
+	    @CacheKeyMethod
+	    public String cacheKey() {
+	        return id.toString();
+	    }
+	
+	    public Long getId() {
+	        return id;
+	    }
+	
+	    public void setId(Long id) {
+	        this.id = id;
+	    }
+	
+	    public String getName() {
+	        return name;
+	    }
+	
+	    public void setName(String name) {
+	        this.name = name;
+	    }
+	
+	    public boolean equals(Object obj) {
+	        return EqualsBuilder.reflectionEquals(
+	                this, obj);
+	    }
+	
+	    public int hashCode() {
+	        return HashCodeBuilder
+	                .reflectionHashCode(this);
+	    }
+	
+	    public String toString() {
+	        return ToStringBuilder.reflectionToString(
+	                this, ToStringStyle.MULTI_LINE_STYLE);
+	    }
+	}
 
 User Model:
 
@@ -68,6 +116,41 @@ User Model:
 	                this, ToStringStyle.MULTI_LINE_STYLE);
 	    }
 	}
+
+## 场景一：根据某个 user ID 查询某个 User。在更新时，更新缓存中的这个 User。
+
+Method:
+
+	@Override
+    @ReadThroughSingleCache(namespace = "user", expiration = 600)
+    public User getUser(@ParameterValueKeyProvider Long id) {
+        return (User) sqlMapClientTemplate.queryForObject("getUser", id);
+    }
+
+    @Override
+    @UpdateSingleCache(namespace = "user", expiration = 60)
+    public void updateUser(@ParameterValueKeyProvider @ParameterDataUpdateContent User user) {
+        sqlMapClientTemplate.update("updateUser", user);
+    }
+    
+SQL:
+
+	<update id="updateUser" parameterClass="user">
+        UPDATE user
+        SET name = #name#
+        WHERE id = #id#
+    </update>
+
+    <select id="getUser" parameterClass="java.lang.Long" resultClass="user">
+        SELECT * FROM user WHERE id = #id#
+    </select>
+    
+只要有相同的 namespace
+
+* 在 getUser 时，会根据 @ParameterValueKeyProvider 找到 User 对象的 @CacheKeyMethod 方法，到 Memcached 中 get user:id。
+* 在 updateUser 时，会根据 @ParameterValueKeyProvider 找到 User 对象的 @CacheKeyMethod 方法，到 Memcached 中 set user:id    
+
+## 场景二：根据某个 role ID 查询所有的 User。查询关联两个以上的 Model（User，Role），在更新  Role 时，需要让相关的缓存失效。
 
 Method:
 
@@ -130,3 +213,4 @@ SQL:
 	    }
 	} 
 
+下一篇会讲一下 MultiCache 的使用。
