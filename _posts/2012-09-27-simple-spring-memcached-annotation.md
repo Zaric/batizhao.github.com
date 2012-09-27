@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "使用 Simple-Spring-Memcached"
+title: "使用 Simple-Spring-Memcached Annotation"
 category: java 
 tags: 
 - spring
@@ -43,7 +43,7 @@ If ids=[1,2,3], Then Memcache Log:
 	set user:3	    
 
 ## AssignCache 类
-无参方法。指定 key 操作 Cache 数据，由 annotation 中的 assignedKey 指定 key。
+无参方法或者自定义 Key 。指定 key 操作 Cache 数据，由 annotation 中的 assignedKey 指定 key。
 
 Java Code:
 
@@ -92,68 +92,6 @@ Java Code:
     @UpdateSingleCache(namespace = "user", expiration = 60)
     @ReturnDataUpdateContent
     public void updateUser(@ParameterValueKeyProvider User user)
-
-# 3. 使多个相关的 Cache 失效
-Java Code:
-
-	@ReadThroughSingleCache(namespace = "user/list", expiration = 600)
-    public List<User> getUsersByRoleId(@ParameterValueKeyProvider Long id) {
-        return (List<User>) sqlMapClientTemplate.queryForList("getUsersByRoleId", id);
-    }
-    
-SQL:
-
-	<select id="getUsersByRoleId" parameterClass="java.lang.Long" resultClass="user">
-		SELECT u.id, u.name, r.id as "role.id", r.name as "role.name"
-	      FROM user u, user_role ur, role r
-	     WHERE u.id = ur.userid and r.id = ur.roleid and ur.roleid = #id#
-	</select>     
-     
-当更新 Role 时:
-
-	@UpdateSingleCache(namespace = "role", expiration = 60)
-    public void updateRole(@ParameterValueKeyProvider @ParameterDataUpdateContent Role role) {
-        sqlMapClientTemplate.update("updateRole", role);
-    } 
-    
-需要让 getUsersByRoleId 的缓存失效。这时最简单的办法是直接使用 annotation  @InvalidateSingleCache
-
-	@UpdateSingleCache(namespace = "role", expiration = 60)
-	@InvalidateSingleCache(namespace = "user/list")
-    public void updateRole(@ParameterValueKeyProvider @ParameterDataUpdateContent Role role) {
-        sqlMapClientTemplate.update("updateRole", role);
-    }
-    
-但是，如果有多个 Cache 需要清除，那这种办法就不适用了。这时可以每个 POJO 定义一个专门用来 invalidate 的类：
-
-	@Component
-	public class UserCache {
-
-	    @InvalidateSingleCache(namespace = "user/list")
-	    public void invalidateGetUsersByRoleId(@ParameterValueKeyProvider Long id){
-	    }
-	    
-    ｝
-    
-在 Service 中调用相关的方法：
-
-	@Service
-	public class RoleManagerImpl implements RoleManager {
-
-	    @Autowired
-	    private RoleDao roleDao;
-	
-	    @Autowired
-	    private UserCache userCache;
-	
-	    @Override
-	    public void updateRole(Role role) {
-	        roleDao.updateRole(role);
-	        userCache.invalidateGetUsersByRoleId(role.getId());
-	        groupCache.invalidate(role.getId());
-	        ...
-	    }
-	}    
 
 
 参考：[使用SSM注解做缓存操作](http://www.colorfuldays.org/program/java/ssm_memcache/)
