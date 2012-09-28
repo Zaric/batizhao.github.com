@@ -139,7 +139,7 @@ SQL:
 	set user/getUsersByRoleIds:1002 8 60 121
 	{"v":{"me.batizhao.model.User":{"id":1002,"name":"Jack","role":{"me.batizhao.model.Role":{"id":1,"name":"ROLE_ADMIN"}}}}}
 	
-在这个返回的 List 中，role.id 不可以做为 Key，因为不是唯一的。试了一下返回 HaspMap，SSM 暂时还不支持。所以想到两种解决办法：
+在这个返回的 List 中，role.id 不可以做为 Key，因为不是唯一的。试了一下返回 HaspMap，@ReadThroughMultiCache 只支持 List。所以想到两种解决办法：
 
 * 循环调用上一篇中的 getUsersByRoleId 方法。
 * 使用 @ReadThroughAssignCache（缺点是缓存做为一整块，不能像 @ReadThroughMultiCache 一样对单个 User 做操作了），到时只能整体清除。

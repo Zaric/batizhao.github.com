@@ -28,7 +28,7 @@ Memcache Log:
 	set user:1
 	
 ## MultiCache 类
-操作 List 型的 Cache 数据，由 ParameterValueKeyProvider 和 CacheKeyMethod 来标识组装 key。
+操作 List 型的 Cache 数据（看做是 SingleCache 的批处理），由 ParameterValueKeyProvider 和 CacheKeyMethod 来标识组装 key。
 
 Java Code:
 
@@ -43,7 +43,7 @@ If ids=[1,2,3], Then Memcache Log:
 	set user:3	    
 
 ## AssignCache 类
-无参方法或者自定义 Key 。指定 key 操作 Cache 数据，由 annotation 中的 assignedKey 指定 key。
+操作所有类型的 Cache 数据。适用于无参方法或者需要自定义 Key 的场景。指定 key 操作 Cache 数据，由 annotation 中的 assignedKey 指定 key。
 
 Java Code:
 
