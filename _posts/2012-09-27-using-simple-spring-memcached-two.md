@@ -61,6 +61,28 @@ Memcached Log:
 	<21 set user:1001
 	>21 STORED
 	
+更新。这里 Batch 调用 updateUser，因为方法没有返回值，所以只能使用 @ParameterDataUpdateContent
+
+	@Override
+    @UpdateMultiCache(namespace = "user", expiration = 60)
+    public void updateUsersByUserIds(@ParameterValueKeyProvider @ParameterDataUpdateContent final List<User> users) {
+        sqlMapClientTemplate.execute(new SqlMapClientCallback() {
+            @Override
+            public Object doInSqlMapClient(SqlMapExecutor executor) throws SQLException {
+                executor.startBatch();
+
+                for(User user: users){
+                    executor.update("updateUser", user);
+                }
+
+                executor.executeBatch();
+
+                return null;
+
+            }
+        });
+    }	
+	
 看一下 Memcached Log，user:1000 直接从 Cache 返回，只有 user:1001 做了数据库操作。这是因为我在执行	getUsersByUserIds 之前，执行了上一篇中的 getUser(1000L)，先生成了 Cache。        
 
 ## 场景二：根据某几个 role ID 查询所有的 User。查询关联两个以上的 Model，在更新其中一个时，需要让相关的缓存失效
@@ -144,7 +166,7 @@ SQL:
 * 循环调用上一篇中的 getUsersByRoleId 方法。
 * 使用 @ReadThroughAssignCache（缺点是缓存做为一整块，不能像 @ReadThroughMultiCache 一样对单个 User 做操作了），到时只能整体清除。
 
-这两种办法可以自行试验一下，下一篇讲 AssignCache。
+第一个方案可以自行试验一下，下一篇讲 AssignCache 如何解决这个问题。
 
 	
 	    	  
