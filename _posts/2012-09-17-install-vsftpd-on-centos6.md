@@ -56,8 +56,6 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 	# mv vsftpd.conf vsftpd.conf.bak
 	# vim vsftpd.conf
 	
-	#行结束不可以有空格
-	#禁止匿名用户访问
 	anonymous_enable=NO
 	
 	#允许登入者有写权限
@@ -107,11 +105,6 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 	#FTP服务器监听21端口
 	listen_port=21
 	
-	#指定FTP服务器使用20端口进行数据传输
-	connect_from_port_20=YES
-	#FTP服务器数据传输端口为20
-	ftp_data_port=20
-	
 	#600秒钟不对FTP服务器进行任何操作，则断开该FTP连接
 	idle_session_timeout=600
 	
@@ -120,8 +113,8 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 	
 	#不限制用户的连接数量
 	max_clients=0
-	#每个IP只能与FTP服务器同时建立3个连接
-	max_per_ip=3
+	#每个IP与FTP服务器同时建立连接数
+	max_per_ip=100
 	
 	#PAM认证文件
 	pam_service_name=vsftpd
@@ -162,6 +155,37 @@ vsftpd 的名字代表”very secure FTP daemon”, 安全是它的开发者 Chr
 
 * 550 Permission denied
 
-	这个问题在我的 Cyberduck for Mac 上有遇到，但是“命令行”和“FileZilla”是没问题的。
+	这个问题可能是多种原因造成的，最常见的是缺少
+	
+		write_enable=YES
+		
+	但在我的环境中，出现这个问题是因为服务端 iptables、客户端防火墙、vsftpd pasv 三者之间的配置造成的。参考 [iptables 中配置 vsftp 的访问](http://blog.csdn.net/moreorless/article/details/5289147)	
+	
+	* 主动模式下，客户连接 TCP/21，服务器通过 TCP/20 连接客户的随机端口。这种情况下，通过状态防火墙可以解决 
+	
+		iptables -A INPUT -m state --state NEW,RELATED,ESTABLISHED -j ACCEPT
+	
+	* 被动模式下，客户连接 TCP/21，客户再通过其他端口连接服务器的随机端口。因为服务器在被动模式下没有打开临时端口让 client 连过来，因此需要几个条件：
+	
+		* client 没有防火墙时，用主动模式连接即可。
+		* server 没有防火墙时，用被动模式即可。
+		* 双方都有防火墙时，vsftpd 设置被动模式高端口范围，server 打开那段范围，client 用被动模式连接即可。
+		* 加载 ip_conntrack_ftp 模块，使 server 支持 connection tracking，支持临时打洞，client 用被动模式即可。
+		* server 使用 ip_conntrack_ftp、client 使用 ip_conntrack_ftp 和 ip_nat_ftp，支持临时打洞和临时 NAT 穿越打洞，双方使用主动或被动模式均可。
+		
+因为我 client 和 server 都有防火墙，所以对前边的 vsftpd 设置稍做修改
+
+	#pasv_enable=NO
+	pasv_min_port=2222
+	pasv_max_port=2322
+	
+修改 iptables 
+
+	-A INPUT -p tcp --dport 2222:2322 -j ACCEPT
+	
+重启
+
+	# service iptables restart
+	# service vsftpd restart				
 
 				
